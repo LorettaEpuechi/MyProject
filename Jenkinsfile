@@ -8,6 +8,14 @@ pipeline {
             }
         }
         
+        stage("SonarQube analysis") {
+            steps {
+              withSonarQubeEnv('sonar') {
+                sh 'mvn -f SampleWebApp/pom.xml clean package sonar:sonar'
+              }
+            }
+          }
+        
    stage('Build with Maven') {
             steps {
                 sh 'cd SampleWebApp && mvn package'
@@ -16,7 +24,7 @@ pipeline {
         
    stage('Deploy to Tomcat') {
             steps {
-                deploy adapters: [tomcat9(credentialsId: 'mytomcat', path: '', url: 'http://18.206.160.18:8080/')], contextPath: 'mypath', war: '**/*.war'
+                deploy adapters: [tomcat9(credentialsId: 'mytomcat', path: '', url: 'http://52.90.92.239:8080/')], contextPath: 'mypath', war: '**/*.war'
             }
         }
     }
